@@ -22,9 +22,9 @@ export default function App() {
 
         {/* Dashboard Routes - Protected */}
         <Route path="/dashboard" element={
-          <ProtectedRoute>
+          //<ProtectedRoute>
             <DashboardLayout />
-          </ProtectedRoute>
+          //</ProtectedRoute>
         }>
           <Route index element={<Navigate to="home" replace />} />
           <Route path="home" element={<MainContent />} />
