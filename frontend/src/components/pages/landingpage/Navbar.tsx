@@ -8,7 +8,7 @@ export function Navbar() {
   const navigate = useNavigate();
 
   const handleLaunchAppClick = () => {
-    navigate('/signin');
+    navigate('/dashboard');
   };
   const navigateToHomepage = () => {
     navigate('/');
