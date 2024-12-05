@@ -8,8 +8,9 @@ export function Navbar() {
   const navigate = useNavigate();
 
   const handleLaunchAppClick = () => {
+    //change this to /signup
     navigate('/dashboard');
-  };
+  };  
   const navigateToHomepage = () => {
     navigate('/');
   }

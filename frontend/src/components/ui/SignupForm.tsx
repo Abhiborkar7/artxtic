@@ -2,17 +2,19 @@
 import React, { useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { IconBrandGoogle } from "@tabler/icons-react";
 import { BackgroundBeamsWithCollision } from "./background-beams-with-collision";
 import { cn } from "@/lib/utils";
-import { useAuth } from '../../contexts/authContext';
+import { useAuth } from '../../contexts/authContext/index';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "@/firebase/auth";
 import { Navigate } from "react-router-dom";
+import { useLoading } from "@/contexts/loadingContext";
 // import { doSignInWithEmailAndPassword } from '../../firebase/firebase'
 
 export function SignupForm() {
 
   const { userLoggedIn } = useAuth();
+  const { setLoading } = useLoading();
+
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -27,8 +29,17 @@ export function SignupForm() {
 
     if (!isSigningIn) {
       setIsSigningIn(true);
+      setLoading(true);
 
       await doSignInWithEmailAndPassword(email, password)
+        .catch((error) => {
+          setIsSigningIn(false);
+          setErrorMessages([error.message]);
+          console.log("Error signing in with Email and Password", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
 
     // const userData = {
@@ -50,18 +61,23 @@ export function SignupForm() {
   const onGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!isSigningIn) {
+      setLoading(true);
       setIsSigningIn(true);
-      doSignInWithGoogle().catch((error) => {
-        setIsSigningIn(false);
-        console.log("Error signing in with Google", error);
-      });
+      doSignInWithGoogle()
+        .catch((error) => {
+          setIsSigningIn(false);
+          console.log("Error signing in with Google", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
     // await doSignInWithGoogle();
   }
 
   return (
     <BackgroundBeamsWithCollision>
-      {userLoggedIn && (<Navigate to="/dashboard" /> )}
+      {userLoggedIn && (<Navigate to="/dashboard" replace />)}
       <div className="max-w-full w-full mx-auto p-4">
         <h2 className="font-bold text-xl text-neutral-200">
           Welcome to artxtic
@@ -69,6 +85,30 @@ export function SignupForm() {
         <p className="text-sm max-w-sm mt-2 text-neutral-300">
           Elevate Your Product Showcase with Engaging Videos & images!
         </p>
+        <div className="flex flex-col space-y-4 mt-5">
+          <button
+            className="relative group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+            type="button"
+            onClick={onGoogleSignIn}
+          >
+            <div className="h-4 w-4 text-neutral-300" ><img src="/images/google-logo.png" alt="" /></div>
+            <span className="text-neutral-300 text-sm">Google</span>
+            <BottomGradient />
+          </button>
+        </div>
+
+        {/* <div className="relative bg-gradient-to-r from-transparent via-neutral-700 to-transparent my-8 h-[1px] w-full text-xs" >
+          <div className="absolute left-[50%] translate-x-[-50%] translate-y-[-50%]">
+            or continue with email
+          </div>
+        </div> */}
+
+        <div className="relative my-2 flex items-center">
+          <div className="flex-grow  bg-gradient-to-r from-transparent  to-neutral-700  my-8 h-[1px] "></div>
+          <span className="mx-1 text-neutral-300 text-xs">or continue with email</span>
+          <div className="flex-grow  bg-gradient-to-r from-neutral-700  to-transparent  my-8 h-[1px] "></div>
+        </div>
+
 
         <form className="my-8">
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
@@ -131,19 +171,8 @@ export function SignupForm() {
             <BottomGradient />
           </button>
 
-          <div className="bg-gradient-to-r from-transparent via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
-          <div className="flex flex-col space-y-4">
-            <button
-              className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-              type="button"
-              onClick={onGoogleSignIn}
-            >
-              <IconBrandGoogle className="h-4 w-4 text-neutral-300" />
-              <span className="text-neutral-300 text-sm">Google</span>
-              <BottomGradient />
-            </button>
-          </div>
+
         </form>
       </div>
     </BackgroundBeamsWithCollision>

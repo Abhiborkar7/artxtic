@@ -11,37 +11,50 @@ import AITools from './components/pages/dashboard/pages/AITools';
 import Settings from './components/pages/dashboard/pages/Settings';
 import HelpSupport from './components/pages/dashboard/pages/HelpSupport';
 import ProtectedRoute from './components/ProtectedRoute';
+import { useLoading } from './contexts/loadingContext';
 
 export default function App() {
+  const { isLoading } = useLoading();
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPageLayout />} />
-        <Route path="/signin" element={<Signinpage />} />
-        <Route path="/home" element={<DashboardLayout />} />
+    <>
+      {
+        isLoading &&
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
+      }
 
-        {/* Dashboard Routes - Protected */}
-        <Route path="/dashboard" element={
-          //<ProtectedRoute>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPageLayout />} />
+          <Route path="/signin" element={<Signinpage />} />
+          <Route path="/home" element={<DashboardLayout />} />
+
+          {/* Dashboard Routes - Protected */}
+          <Route path="/dashboard" element={
+            //<ProtectedRoute>
             <DashboardLayout />
-          //</ProtectedRoute>
-        }>
-          <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={<MainContent />} />
-          <Route path="library" element={<Library />} />
-          <Route path="image" element={<ImageCreation />} />
-          <Route path="video" element={<VideoCreation />} />
-          <Route path="canvas" element={<CanvasEditor />} />
-          <Route path="ai" element={<AITools />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="help" element={<HelpSupport />} />
+            //</ProtectedRoute>
+          }>
+            <Route index element={<Navigate to="home" replace />} />
+            <Route path="home" element={<MainContent />} />
+            <Route path="library" element={<Library />} />
+            <Route path="image" element={<ImageCreation />} />
+            <Route path="video" element={<VideoCreation />} />
+            <Route path="canvas" element={<CanvasEditor />} />
+            <Route path="ai" element={<AITools />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="help" element={<HelpSupport />} />
 
-        </Route>
+          </Route>
 
-        {/* Fallback Route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
 
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </>
+
   );
 }
