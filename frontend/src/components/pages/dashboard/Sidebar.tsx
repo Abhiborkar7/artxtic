@@ -3,20 +3,20 @@ import { UserProfile } from '../../layout/UserProfile';
 import { SidebarLink } from '../../layout/SidebarLink';
 
 const mainLinks = [
-  { icon: Home, label: 'Home' },
-  { icon: Library, label: 'Library' },
+  { icon: Home, label: 'Home', path: '/dashboard/home' },
+  { icon: Library, label: 'Library', path: '/dashboard/library' },
 ];
 
 const toolLinks = [
-  { icon: Image, label: 'Image Creation' },
-  { icon: Video, label: 'Video Creation' },
-  { icon: Pencil, label: 'Canvas Editor' },
-  { icon: Wand2, label: 'AI Tools' },
+  { icon: Image, label: 'Image Creation', path: '/dashboard/image' },
+  { icon: Video, label: 'Video Creation', path: '/dashboard/video' },
+  { icon: Pencil, label: 'Canvas Editor', path: '/dashboard/canvas' },
+  { icon: Wand2, label: 'AI Tools', path: '/dashboard/ai' },
 ];
 
 const bottomLinks = [
-  { icon: Settings, label: 'Settings' },
-  { icon: HelpCircle, label: 'Help & Support' },
+  { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
+  { icon: HelpCircle, label: 'Help & Support', path: '/dashboard/help' },
 ];
 
 export function Sidebar() {
@@ -27,7 +27,7 @@ export function Sidebar() {
       <div className="flex-1 px-3 py-4 space-y-6">
         <div className="space-y-1">
           {mainLinks.map((link) => (
-            <SidebarLink key={link.label} icon={link.icon} label={link.label} />
+            <SidebarLink to={link.path} key={link.label} icon={link.icon} label={link.label} />
           ))}
         </div>
 
@@ -37,7 +37,7 @@ export function Sidebar() {
           </h3>
           <div className="mt-2 space-y-1">
             {toolLinks.map((link) => (
-              <SidebarLink key={link.label} icon={link.icon} label={link.label} />
+              <SidebarLink  to={link.path} key={link.label} icon={link.icon} label={link.label} />
             ))}
           </div>
         </div>
@@ -45,7 +45,7 @@ export function Sidebar() {
 
       <div className="p-3 border-t border-white/10">
         {bottomLinks.map((link) => (
-          <SidebarLink key={link.label} icon={link.icon} label={link.label} />
+          <SidebarLink  to={link.path} key={link.label} icon={link.icon} label={link.label} />
         ))}
       </div>
     </div>

@@ -1,11 +1,13 @@
 import { Sidebar } from './Sidebar';
-import { MainContent } from './MainContent';
+import { Outlet } from 'react-router-dom';
 
 export function DashboardLayout() {
   return (
     <div className="flex h-screen bg-[#0A0A0B]">
       <Sidebar />
-      <MainContent />
+      <div className="flex-1 overflow-auto text-white">
+        <Outlet />
+      </div>
     </div>
   );
 }

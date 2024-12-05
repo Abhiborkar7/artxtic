@@ -1,51 +1,131 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
-import {
-  IconBrandGoogle,
-} from "@tabler/icons-react";
+import { IconBrandGoogle } from "@tabler/icons-react";
 import { BackgroundBeamsWithCollision } from "./background-beams-with-collision";
+import { cn } from "@/lib/utils";
+import { useAuth } from '../../contexts/authContext';
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "@/firebase/auth";
+import { Navigate } from "react-router-dom";
+// import { doSignInWithEmailAndPassword } from '../../firebase/firebase'
 
 export function SignupForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const { userLoggedIn } = useAuth();
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+
+      await doSignInWithEmailAndPassword(email, password)
+    }
+
+    // const userData = {
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   password,
+    // };
+
+    // axios.post("/api/signup", userData)
+    //   .then((response) => {
+    //     console.log("Signup successful", response);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error during signup:", error);
+    //   });
   };
+
+  const onGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      doSignInWithGoogle().catch((error) => {
+        setIsSigningIn(false);
+        console.log("Error signing in with Google", error);
+      });
+    }
+    // await doSignInWithGoogle();
+  }
+
   return (
     <BackgroundBeamsWithCollision>
+      {userLoggedIn && (<Navigate to="/dashboard" /> )}
       <div className="max-w-full w-full mx-auto p-4">
         <h2 className="font-bold text-xl text-neutral-200">
           Welcome to artxtic
         </h2>
-        <p className="text-sm max-w-sm mt-2  text-neutral-300">
+        <p className="text-sm max-w-sm mt-2 text-neutral-300">
           Elevate Your Product Showcase with Engaging Videos & images!
         </p>
 
-        <form className="my-8" onSubmit={handleSubmit}>
-          <div className="flex flex-col md:flex-row  space-y-2 md:space-y-0 md:space-x-2 mb-4">
+        <form className="my-8">
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
-              <Label htmlFor="firstname" className="text-neutral-200" >First name</Label>
-              <Input id="firstname" placeholder="Tyler" type="text" />
+              <Label htmlFor="firstname" className="text-neutral-200">
+                First name
+              </Label>
+              <Input
+                id="firstname"
+                placeholder="Tyler"
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
             </LabelInputContainer>
             <LabelInputContainer>
-              <Label htmlFor="lastname" className="text-neutral-200" >Last name</Label>
-              <Input id="lastname" placeholder="Durden" type="text" />
+              <Label htmlFor="lastname" className="text-neutral-200">
+                Last name
+              </Label>
+              <Input
+                id="lastname"
+                placeholder="Durden"
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
             </LabelInputContainer>
           </div>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email" className="text-neutral-200" >Email Address</Label>
-            <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+            <Label htmlFor="email" className="text-neutral-200">
+              Email Address
+            </Label>
+            <Input
+              id="email"
+              placeholder="projectmayhem@fc.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="password" className="text-neutral-200" >Password</Label>
-            <Input id="password" placeholder="••••••••" type="password" />
+            <Label htmlFor="password" className="text-neutral-200">
+              Password
+            </Label>
+            <Input
+              id="password"
+              placeholder="••••••••"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </LabelInputContainer>
 
           <button
             className="bg-gradient-to-br relative group/btn from-zinc-900 to-zinc-900 block bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
           >
             Sign up &rarr;
             <BottomGradient />
@@ -55,13 +135,12 @@ export function SignupForm() {
 
           <div className="flex flex-col space-y-4">
             <button
-              className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-              type="submit"
+              className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+              type="button"
+              onClick={onGoogleSignIn}
             >
               <IconBrandGoogle className="h-4 w-4 text-neutral-300" />
-              <span className="text-neutral-300 text-sm">
-                Google
-              </span>
+              <span className="text-neutral-300 text-sm">Google</span>
               <BottomGradient />
             </button>
           </div>
@@ -70,6 +149,8 @@ export function SignupForm() {
     </BackgroundBeamsWithCollision>
   );
 }
+
+// Make sure to define or import LabelInputContainer and BottomGradient components
 
 const BottomGradient = () => {
   return (
