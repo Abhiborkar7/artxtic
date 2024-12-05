@@ -1,5 +1,4 @@
 import tailwindcssAnimate from 'tailwindcss-animate';
-import colors from "tailwindcss/colors"
 
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 

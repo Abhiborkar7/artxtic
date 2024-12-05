@@ -1,15 +1,29 @@
-import { Navbar } from "@/components/pages/landingpage/Navbar";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { SignupForm } from "@/components/ui/SignupForm";
 
 const Signinpage = () => {
     return (
-        <div className="min-h-screen bg-black text-white relative bg-gradient-to-br from-blue-950 via-gray-900 to-black">
-            <div className="absolute inset-0 bg-grid-white/10 bg-grid-8 pointer-events-none" />
-            <Navbar />
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <SignupForm />
+        <BackgroundBeamsWithCollision>
+
+            <div className="min-h-screen dark bg-black text-white relative bg-gradient-to-br from-blue-950 via-gray-900 to-black">
+                <div className="absolute inset-0 bg-grid-white/10 bg-grid-8 pointer-events-none" />
+                <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-lg" />
+                <div className="flex items-center justify-center min-h-screen px-10 py-10 ">
+                    <div className="flex flex-col md:flex-row bg-white bg-opacity-10 backdrop-blur-md rounded-lg shadow-lg overflow-hidden w-full max-w-[90%] ">
+                        <div className="w-full md:w-1/2 p-8">
+                            <SignupForm />
+                        </div>
+                        <div className="hidden md:block w-1/2">
+                            <img
+                                src="/images/signup.png"
+                                alt="Sign In"
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </BackgroundBeamsWithCollision>
     );
 };
 
