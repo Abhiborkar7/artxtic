@@ -1,5 +1,5 @@
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
-import { SignupForm } from "@/components/ui/SignupForm";
+import { SignupForm } from "@/components/pages/auth/SignupForm";
 
 const Signinpage = () => {
     return (
@@ -10,7 +10,7 @@ const Signinpage = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-lg" />
                 <div className="flex items-center justify-center min-h-screen">
                     <div className="flex flex-col md:flex-row bg-white bg-opacity-10 backdrop-blur-md rounded-lg shadow-lg overflow-hidden w-full">
-                        
+
                         <div className="hidden md:block w-1/2">
                             <img
                                 src="/images/signup.png"

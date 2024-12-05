@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from './components/pages/dashboard/DashboardLayout';
 import { LandingPageLayout } from "./components/pages/landingpage/LandingPageLayout";
-import Signinpage from './components/pages/Signin/Signinpage';
+import Signinpage from './components/pages/auth/Signinpage';
 import { MainContent } from './components/pages/dashboard/MainContent';
 import { ImageCreation } from './components/pages/dashboard/pages/ImageCreation';
 import Library from './components/pages/dashboard/pages/Library';
@@ -28,7 +28,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPageLayout />} />
-          <Route path="/signin" element={<Signinpage />} />
+          <Route path="/auth" element={<Signinpage />} />
           <Route path="/home" element={<DashboardLayout />} />
 
           {/* Dashboard Routes - Protected */}

@@ -7,7 +7,7 @@ export function HeroButtons() {
   const navigate = useNavigate();
 
   const handleLaunchAppClick = () => {
-    navigate('/signin');
+    navigate('/auth');
   };
   
   
