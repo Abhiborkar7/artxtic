@@ -1,5 +1,5 @@
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
 
 export function HeroButtons() {
@@ -7,7 +7,7 @@ export function HeroButtons() {
   const navigate = useNavigate();
 
   const handleLaunchAppClick = () => {
-    navigate('/home');
+    navigate('/signin');
   };
   
   

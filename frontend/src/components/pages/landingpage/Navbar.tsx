@@ -10,6 +10,10 @@ export function Navbar() {
   const handleLaunchAppClick = () => {
     navigate('/home');
   };
+  const navigateToHomepage = () => {
+    navigate('/');
+  }
+
 
 
   return (
@@ -19,7 +23,7 @@ export function Navbar() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <div className="text-2xl font-bold text-white flex items-center gap-2">
-                <div className='inline-flex text-white items-center justify-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none  focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary underline-offset-4 hover:underline h-9 px-4 py-2 text-2xl font-semibold md:text-3xl lg:text-4xl' style={{ fontFamily: 'PolySans, sans-serif' }}>
+                <div className='inline-flex text-white items-center justify-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none  focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary underline-offset-4 hover:underline h-9 px-4 py-2 text-2xl font-semibold md:text-3xl lg:text-4xl' style={{ fontFamily: 'PolySans, sans-serif' }} onClick={navigateToHomepage}  >
                   artxtic
                 </div>
               </div>
