@@ -8,12 +8,15 @@ import { useAuth } from '../../contexts/authContext/index';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "@/firebase/auth";
 import { Navigate } from "react-router-dom";
 import { useLoading } from "@/contexts/loadingContext";
+import { useToast } from "@/hooks/use-toast";
 // import { doSignInWithEmailAndPassword } from '../../firebase/firebase'
 
 export function SignupForm() {
 
   const { userLoggedIn } = useAuth();
   const { setLoading } = useLoading();
+  const { toast } = useToast()
+
 
 
   const [firstName, setFirstName] = useState("");
@@ -36,6 +39,13 @@ export function SignupForm() {
           setIsSigningIn(false);
           setErrorMessages([error.message]);
           console.log("Error signing in with Email and Password", error);
+
+          toast({
+            variant: "destructive",
+            title: "Sign In Unsuccesful",
+            // description: "",
+          })
+
         })
         .finally(() => {
           setLoading(false);
@@ -67,6 +77,13 @@ export function SignupForm() {
         .catch((error) => {
           setIsSigningIn(false);
           console.log("Error signing in with Google", error);
+
+          toast({
+            variant: "destructive",
+            title: "Google Sign In Unsuccesful",
+            // description: "",
+          })
+
         })
         .finally(() => {
           setLoading(false);
