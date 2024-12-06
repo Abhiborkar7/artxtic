@@ -3,7 +3,7 @@ import { DashboardLayout } from './components/pages/dashboard/DashboardLayout';
 import { LandingPageLayout } from "./components/pages/landingpage/LandingPageLayout";
 import Signinpage from './components/pages/auth/Signinpage';
 import { MainContent } from './components/pages/dashboard/MainContent';
-import { ImageCreation } from './components/pages/dashboard/pages/ImageCreation';
+import { ImageCreation } from './components/pages/dashboard/pages/imageCreation/ImageCreation';
 import Library from './components/pages/dashboard/pages/Library';
 import VideoCreation from './components/pages/dashboard/pages/VideoCreation';
 import CanvasEditor from './components/pages/dashboard/pages/CanvasEditor';
