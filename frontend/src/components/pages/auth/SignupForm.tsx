@@ -1,15 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { BackgroundBeamsWithCollision } from "../../ui/background-beams-with-collision";
 import { cn } from "@/lib/utils";
-import { useAuth } from '../../../contexts/authContext/index';
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "@/firebase/auth";
+import { useAuth } from '../../../contexts/authContext';
 import { Navigate } from "react-router-dom";
 import { useLoading } from "@/contexts/loadingContext";
 import { useToast } from "@/hooks/use-toast";
-// import { doSignInWithEmailAndPassword } from '../../firebase/firebase'
+import { auth } from "@/firebase/firebase";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
 export function SignupForm() {
 
@@ -19,102 +19,147 @@ export function SignupForm() {
 
   const [isNewUser, setIsNewUser] = useState(false);
 
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const { currentUser } = useAuth();
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!isSigningIn) {
+
       setIsSigningIn(true);
       setLoading(true);
 
-      await doSignInWithEmailAndPassword(email, password)
-        .then(() => {
-          setIsSigningIn(false);
-          console.log("Sign in with Email and Password successful");
-
-          toast({
-            title: "Sign In Succesful",
-            // description: "",
-          })
-        })
-        .catch((error) => {
-          setIsSigningIn(false);
-          setErrorMessages([error.message]);
-          console.log("Error signing in with Email and Password", error);
-
-          toast({
-            variant: "destructive",
-            title: "Sign In Unsuccesful",
-            // description: "",
-          })
-
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      if (isNewUser)
+        createUser();
+      else
+        signIn();
     }
-
-    // const userData = {
-    //   firstName,
-    //   lastName,
-    //   email,
-    //   password,
-    // };
-
-    // axios.post("/api/signup", userData)
-    //   .then((response) => {
-    //     console.log("Signup successful", response);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error during signup:", error);
-    //   });
   };
+
+  const createUser = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      setIsSigningIn(false);
+      console.log("Sign up with Email and Password successfull");
+      console.log("currentUser", currentUser);
+      console.log("User signed up:", userCredential.user);
+
+      toast({
+        title: "Sign Up Succesful",
+        // description: "",
+      })
+    } catch (error: any) {
+      setIsSigningIn(false);
+
+      if (error.code === "auth/email-already-in-use") {
+        toast({
+          variant: "destructive",
+          title: "This email is already in use.",
+          // description: "",
+        })
+      } else {
+        console.error("Error creating user:", error.message);
+        toast({
+          variant: "destructive",
+          title: "An error occurred during signup. Please try again.",
+          // description: "",
+        })
+      }
+
+
+
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const signIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      setIsSigningIn(false);
+      console.log("Sign in with Email and Password successfull");
+      console.log("currentUser: ", currentUser);
+      console.log("User logged in:", userCredential.user);
+
+      toast({
+        title: "Sign In Succesful",
+        // description: "",
+      })
+    } catch (error: any) {
+      setIsSigningIn(false);
+      console.log("Error signing in with Email and Password", error);
+
+      toast({
+        variant: "destructive",
+        title: "Sign In Unsuccesful",
+        // description: "",
+      })
+    }
+    finally {
+      setLoading(false);
+
+    }
+  }
 
   const onGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!isSigningIn) {
       setLoading(true);
       setIsSigningIn(true);
-      doSignInWithGoogle()
-        .then(() => {
-          setIsSigningIn(false);
-          console.log("Sign in with Google successful");
 
-          toast({
-            title: "Google Sign In Succesful",
-            // description: "",
-          })
+      try {
+        const provider = new GoogleAuthProvider();
+        const userCredential = await signInWithPopup(auth, provider);
+        setIsSigningIn(false);
+        console.log("Sign in with Google successful");
+        console.log("User logged in with Google:", userCredential.user);
+        toast({
+          title: "Google Sign In Succesful",
+          // description: "",
         })
-        .catch((error) => {
-          setIsSigningIn(false);
-          console.log("Error signing in with Google", error);
+      }
+      catch (error: any) {
+        setIsSigningIn(false);
+        console.log("Error signing in with Google", error);
 
-          toast({
-            variant: "destructive",
-            title: "Google Sign In Unsuccesful",
-            // description: "",
-          })
-
+        toast({
+          variant: "destructive",
+          title: "Google Sign In Unsuccesful",
+          // description: "",
         })
-        .finally(() => {
-          setLoading(false);
-        });
+      }
+      finally {
+        setLoading(false);
+
+      }
+
     }
-    // await doSignInWithGoogle();
   }
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is logged in:", user);
+      } else {
+        console.log("No user is logged in");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
 
   return (
     <BackgroundBeamsWithCollision>
       {userLoggedIn && (<Navigate to="/dashboard" replace />)}
-      <div className="max-w-full w-full mx-auto p-4 md:px-36">
+      <div className="max-w-full w-full sm:p-24 mx-auto p-4 md:p-12 xl:p-36">
         <h2 className="font-bold text-xl text-neutral-200">
           Welcome to artxtic
         </h2>

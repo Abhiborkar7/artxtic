@@ -1,4 +1,4 @@
-import { auth } from "../../firebase/firebase";
+import { auth } from "../firebase/firebase";
 import React, { useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 
@@ -34,7 +34,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     return unsubscribe;
   }, []);
 
-  // Define the user initialization logic
   async function initializeUser(user: User | null): Promise<void> {
     if (user) {
       setCurrentUser(user);
