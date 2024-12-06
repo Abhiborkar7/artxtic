@@ -16,7 +16,7 @@ export function Hero() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
 				>
-					Create Stunning <span className="rounded-md bg-pink-600 px-2">Visuals</span> from Just an Idea
+					Create Stunning <span className="rounded-md bg-[rgb(55,48,163)] px-2">Visuals</span> from Just an Idea
 
 				</motion.h1>
 				<motion.p
@@ -60,7 +60,7 @@ export function Hero() {
 			<ImagesGrid />
 
 
-			<Footer />
+			{/* <Footer /> */}
 
 		</div>
 

@@ -37,7 +37,7 @@ export function ImageCreation() {
 
         const config = {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `bearer ${token}`,
           },
         };
 

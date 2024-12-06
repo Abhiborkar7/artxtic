@@ -7,7 +7,7 @@ export function HeroButtons() {
   const navigate = useNavigate();
 
   const handleLaunchAppClick = () => {
-    navigate('/auth');
+    navigate('/dashboard');
   };
   
   
@@ -19,7 +19,7 @@ export function HeroButtons() {
       transition={{ duration: 0.5, delay: 0.4 }}
     >
       <Button size="lg" className="bg-white text-purple-900 hover:bg-purple-50" onClick={handleLaunchAppClick}>
-        Get Started
+        Launch App
       </Button>
     </motion.div>
   );
