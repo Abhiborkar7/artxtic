@@ -158,7 +158,9 @@ export function SignupForm() {
 
   return (
     <BackgroundBeamsWithCollision>
-      {userLoggedIn && (<Navigate to="/dashboard" replace />)}
+
+      {/* uncomment later, for development purposes */}
+      {/* {userLoggedIn && (<Navigate to="/dashboard" replace />)} */}
       <div className="max-w-full w-full sm:p-24 mx-auto p-4 md:p-12 xl:p-36">
         <h2 className="font-bold text-xl text-neutral-200">
           Welcome to artxtic
