@@ -18,7 +18,7 @@ const Signinpage = () => {
                                 className="object-cover w-full h-full"
                             />
                         </div>
-                        <div className="w-full md:w-1/2 p-8">
+                        <div className="w-full md:w-1/2  ">
                             <SignupForm />
                         </div>
                     </div>
