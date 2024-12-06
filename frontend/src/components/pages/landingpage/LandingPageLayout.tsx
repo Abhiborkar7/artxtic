@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/pages/landingpage/Navbar";
 import { Hero } from "./Hero";
-import { FeatureCards } from "./FeatureCards";
 
 export function LandingPageLayout() {
 
@@ -9,7 +8,6 @@ export function LandingPageLayout() {
       <div className="absolute inset-0 bg-grid-white/10 bg-grid-8" />
       <Navbar />
       <Hero />
-      <FeatureCards />
     </div>
 
   )
