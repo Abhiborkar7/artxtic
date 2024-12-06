@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
 import './infiniteSlide.css';
 
-const PromptsSlider = () => {
+interface PromptsSliderProps {
+    setPrompt: (prompt: string) => void;
+}
+
+const PromptsSlider: React.FC<PromptsSliderProps> = ({ setPrompt }) => {
     const prompts = [
         '🌟 Limited Edition',
         '🔥 Hot Deal',
@@ -28,6 +32,11 @@ const PromptsSlider = () => {
         '👗 Fashion Forward',
         '🏋️‍♀️ High Performance',
     ];
+
+    const handleClick = (prompt: string) => {
+        setPrompt(prompt);
+    }
+
     return (
         <motion.div
             style={{ fontFamily: 'TomatoGrotesk, sans-serif' }}
@@ -38,7 +47,7 @@ const PromptsSlider = () => {
             <div>
                 <div className="wrapper line1">
                     {prompts.slice(0, 8).map((prompt, index) => (
-                        <div key={index} className={`item item${index + 1}`}>
+                        <div onClick={() => handleClick(prompt)} key={index} className={`item item${index + 1}`}>
                             {prompt}
                         </div>
                     ))}
@@ -47,7 +56,7 @@ const PromptsSlider = () => {
             <div>
                 <div className="wrapper line2">
                     {prompts.slice(8, 16).map((prompt, index) => (
-                        <div key={index} className={`item item${index + 1}`}>
+                        <div onClick={() => handleClick(prompt)} key={index} className={`item item${index + 1}`}>
                             {prompt}
                         </div>
                     ))}
@@ -56,7 +65,7 @@ const PromptsSlider = () => {
             <div>
                 <div className="wrapper line3">
                     {prompts.slice(16, 24).map((prompt, index) => (
-                        <div key={index} className={`item item${index + 1}`}>
+                        <div onClick={() => handleClick(prompt)} key={index} className={`item item${index + 1}`}>
                             {prompt}
                         </div>
                     ))}

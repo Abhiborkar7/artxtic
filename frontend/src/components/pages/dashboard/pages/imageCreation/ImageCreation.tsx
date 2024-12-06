@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/authContext';
 
 export function ImageCreation() {
   
-  const [prompt, setPrompt ] = useState<string | null>();
+  const [prompt, setPrompt ] = useState<string>("");
   const { currentUser } = useAuth();
   
   const placeholders = [
@@ -104,7 +104,7 @@ export function ImageCreation() {
         </motion.h2>
       </div>
 
-      <PromptsSlider />
+      <PromptsSlider setPrompt={setPrompt} />
 
       <div className="dark h-[20rem] flex flex-col justify-center  items-center px-4">
 
@@ -112,6 +112,7 @@ export function ImageCreation() {
           placeholders={placeholders}
           onChange={handleChange}
           onSubmit={onSubmit}
+          promptValue={prompt}
         />
       </div>
     </div>
