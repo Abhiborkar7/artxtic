@@ -27,7 +27,7 @@ export function useAuth(): AuthContextType {
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, initializeUser);

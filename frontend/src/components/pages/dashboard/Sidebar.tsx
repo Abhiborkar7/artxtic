@@ -1,4 +1,4 @@
-import { Home, Library, Image, Video, Pencil, Wand2, Settings, HelpCircle } from 'lucide-react';
+import { Home, Library, Image, Video, Pencil, Wand2, LogOut, HelpCircle } from 'lucide-react';
 import { UserProfile } from '../../layout/UserProfile';
 import { SidebarLink } from '../../layout/SidebarLink';
 
@@ -15,7 +15,7 @@ const toolLinks = [
 ];
 
 const bottomLinks = [
-  { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
+  { icon: LogOut, label: 'Logout', path: '/landingpage' },
   { icon: HelpCircle, label: 'Help & Support', path: '/dashboard/help' },
 ];
 

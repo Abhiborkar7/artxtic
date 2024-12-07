@@ -28,6 +28,11 @@
   box-sizing: border-box;
 }
 
+/* Hide the scrollbar in Webkit-based browsers */
+::-webkit-scrollbar {
+  display: none;
+}
+
 
 /* TomatoGrotesk */
 @font-face {

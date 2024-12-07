@@ -16,6 +16,7 @@ const Faq = () => {
           Still got questions?
           <a
             href="mailto:"
+            key={5}
             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 underline-offset-4 hover:underline h-9 p-0 text-base underline group relative text-emerald-400"
           >
             Mail us
@@ -135,7 +136,7 @@ const Faq = () => {
         </div>
 
         {/* FAQ Item 4 */}
-        <div className="border-b" key="2">
+        <div className="border-b" key="3">
           <h3 className="flex">
             <button
               type="button"

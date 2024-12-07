@@ -2,13 +2,15 @@ import { Phone } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { NavbarLink } from '../../layout/NavbarLink';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/authContext';
 
 export function Navbar() {
 
   const navigate = useNavigate();
+  const { userLoggedIn } = useAuth();
+
 
   const handleLaunchAppClick = () => {
-    //change this to /signup
     navigate('/auth');
   };
   const navigateToHomepage = () => {
@@ -21,7 +23,7 @@ export function Navbar() {
     <nav className="fixed top-0 w-full bg-black/10 backdrop-blur-md border-b border-white/10 z-50">
       <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className=" ">
+          <div onClick={navigateToHomepage}>
             <div className="font-normal text-white flex items-center gap-2">
               <div className='text-4xl'>
                 artxtic
@@ -41,7 +43,7 @@ export function Navbar() {
           </div>
             <div className="hidden md:block">
               <Button variant="primary" className="bg-purple-600 hover:bg-purple-700" onClick={handleLaunchAppClick}>
-                Signin/Signup
+                {userLoggedIn ? "Get Started" : "Signin/Signup"}
               </Button>
             </div>
         </div>

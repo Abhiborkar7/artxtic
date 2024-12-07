@@ -1,15 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Label } from "../../ui/label";
-import { Input } from "../../ui/input";
 import { BackgroundBeamsWithCollision } from "../../ui/background-beams-with-collision";
-import { cn } from "@/lib/utils";
 import { useAuth } from '../../../contexts/authContext';
 import { Navigate } from "react-router-dom";
 import { useLoading } from "@/contexts/loadingContext";
 import { useToast } from "@/hooks/use-toast";
 import { auth } from "@/firebase/firebase";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { MobileNumberInput } from "./MobileNumberInput";
+import { LabelInputContainer } from "./LabelInputContainer";
+import axios from "axios";
 
 export function SignupForm() {
 
@@ -22,6 +35,8 @@ export function SignupForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("91");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -29,6 +44,26 @@ export function SignupForm() {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (isNewUser) {
+      if (firstName == "") {
+        toast({
+          variant: "destructive",
+          title: "Enter first name",
+          // description: "",
+        })
+        return;
+      }
+
+      if (phoneNumber.length < 10) {
+        toast({
+          variant: "destructive",
+          title: "Enter phone number",
+          // description: "",
+        })
+        return;
+      }
+    }
 
     if (!isSigningIn) {
 
@@ -42,16 +77,33 @@ export function SignupForm() {
     }
   };
 
+  const registerUserToBackend = async () => {
+
+    const token = await auth.currentUser?.getIdToken();
+    console.log("Bearer : ", token)
+
+    await axios.post("/api/person/register", {
+      name: firstName,
+      phone: countryCode + phoneNumber,
+      Password: password
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+  }
+
   const createUser = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setIsSigningIn(false);
-      console.log("Sign up with Email and Password successfull");
+      console.log("Sign up with Email and Password successful");
       console.log("currentUser", currentUser);
       console.log("User signed up:", userCredential.user);
+      registerUserToBackend();
 
       toast({
-        title: "Sign Up Succesful",
+        title: "Sign Up Successful",
         // description: "",
       })
     } catch (error: any) {
@@ -71,9 +123,6 @@ export function SignupForm() {
           // description: "",
         })
       }
-
-
-
     } finally {
       setLoading(false);
     }
@@ -109,7 +158,19 @@ export function SignupForm() {
 
   const onGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+
     if (!isSigningIn) {
+
+      if (isNewUser && phoneNumber.length < 10) {
+        toast({
+          variant: "destructive",
+          title: "Please enter phone number",
+          // description: "",
+        })
+        return;
+      }
+
       setLoading(true);
       setIsSigningIn(true);
 
@@ -125,13 +186,21 @@ export function SignupForm() {
         })
       }
       catch (error: any) {
+
         setIsSigningIn(false);
-        console.log("Error signing in with Google", error);
+        setLoading(false);
+
+        if (error.code === 'auth/popup-closed-by-user') {
+          console.log('The user closed the popup before completing sign-in.');
+        } else if (error.code === 'auth/cancelled-popup-request') {
+          console.log('Canceled popup request due to another popup being opened.');
+        } else {
+          console.error('Error during sign-in:', error);
+        }
 
         toast({
           variant: "destructive",
           title: "Google Sign In Unsuccesful",
-          // description: "",
         })
       }
       finally {
@@ -159,26 +228,68 @@ export function SignupForm() {
   return (
     <BackgroundBeamsWithCollision>
 
+
+
       {/* uncomment later, for development purposes */}
-      {/* {userLoggedIn && (<Navigate to="/dashboard" replace />)} */}
-      <div className="max-w-full w-full sm:p-24 mx-auto p-4 md:p-12 xl:p-36">
+      {userLoggedIn && (<Navigate to="/dashboard" replace />)}
+      <div className=" max-w-full w-full sm:p-24 mx-auto p-4 md:p-12 xl:p-36">
         <h2 className="font-bold text-xl text-neutral-200">
           Welcome to artxtic
         </h2>
         <p className="text-sm max-w-sm mt-2 text-neutral-300">
           Elevate Your Product Showcase with Engaging Videos & images!
         </p>
-        <div className="flex flex-col space-y-4 mt-5">
-          <button
-            className="relative group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="button"
-            onClick={onGoogleSignIn}
-          >
-            <div className="h-4 w-4 text-neutral-300" ><img src="/images/google-logo.png" alt="" /></div>
-            <span className="text-neutral-300 text-sm">Google</span>
-            <BottomGradient />
-          </button>
-        </div>
+        <div className="my-10" ></div>
+
+        {
+          !isNewUser ?
+            (
+              <button
+                className="relative dark group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+                type="button"
+                onClick={onGoogleSignIn}
+              >
+                <div className="h-4 w-4 text-neutral-300" ><img src="/images/google-logo.png" alt="" /></div>
+                <span className="text-neutral-300 text-sm">Google</span>
+                <BottomGradient />
+              </button>
+            )
+            :
+            (
+              <Dialog >
+                <DialogTrigger asChild>
+                  <button
+                    className="relative dark group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-zinc-900 shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+                    type="button"
+                  >
+                    <div className="h-4 w-4 text-neutral-300" ><img src="/images/google-logo.png" alt="" /></div>
+                    <span className="text-neutral-300 text-sm">Google</span>
+                    <BottomGradient />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] dark">
+                  <DialogHeader>
+                    <DialogTitle className="text-white" >Enter Phone Number</DialogTitle>
+                    <DialogDescription>
+                      Enter Phone Number. Click contiune when you're done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+
+                    <MobileNumberInput countryCode={countryCode} setCountryCode={setCountryCode} phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
+
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      onClick={onGoogleSignIn}
+                      type="submit">Continue</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )
+        }
+
+
 
         <div className="relative my-2 flex items-center">
           <div className="flex-grow  bg-gradient-to-r from-transparent  to-neutral-700  my-8 h-[1px] "></div>
@@ -191,7 +302,7 @@ export function SignupForm() {
           isNewUser ? (
             <>
               <form className="my-8">
-                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-2">
                   <LabelInputContainer>
                     <Label htmlFor="firstname" className="text-neutral-200">
                       First name
@@ -217,6 +328,10 @@ export function SignupForm() {
                     />
                   </LabelInputContainer>
                 </div>
+
+                <MobileNumberInput countryCode={countryCode} setCountryCode={setCountryCode} phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
+
+
                 <LabelInputContainer className="mb-4">
                   <Label htmlFor="email" className="text-neutral-200">
                     Email Address
@@ -229,6 +344,7 @@ export function SignupForm() {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </LabelInputContainer>
+
                 <LabelInputContainer className="mb-4">
                   <Label htmlFor="password" className="text-neutral-200">
                     Password
@@ -313,8 +429,6 @@ export function SignupForm() {
             )
         }
 
-
-
       </div>
     </BackgroundBeamsWithCollision>
   );
@@ -326,19 +440,5 @@ const BottomGradient = () => {
       <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
       <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
     </>
-  );
-};
-
-const LabelInputContainer = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
-    </div>
   );
 };

@@ -1,11 +1,22 @@
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { SignupForm } from "@/components/pages/auth/SignupForm";
+import { useAuth } from "@/contexts/authContext";
+import { Navigate } from "react-router-dom";
 
 const Signinpage = () => {
+
+
+  const { userLoggedIn } = useAuth();
+
+  if(userLoggedIn) {
+    return <Navigate to="/dashboard" replace />;
+
+  }
+
     return (
         <BackgroundBeamsWithCollision>
 
-            <div className="min-h-screen dark bg-black text-white relative bg-gradient-to-br from-blue-950 via-gray-900 to-black w-full">
+            <div className="min-h-screen h-screen dark bg-black text-white relative bg-gradient-to-br from-blue-950 via-gray-900 to-black w-full">
                 <div className="absolute inset-0 bg-grid-white/10 bg-grid-8 pointer-events-none" />
                 <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-lg" />
                 <div className="flex items-center justify-center min-h-screen">
